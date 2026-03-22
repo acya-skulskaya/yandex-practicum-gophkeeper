@@ -1,0 +1,22 @@
+all: false
+dir: '{{.InterfaceDir}}/mocks'
+filename: 'mock_{{.InterfaceName}}.go'
+force-file-write: true
+formatter: gofmt
+generate: true
+include-auto-generated: false
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: 'mocks'
+recursive: false
+require-template-schema-exists: true
+template: testify
+template-schema: '{{.Template}}.schema.json'
+packages:
+  github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/server/repository/user:
+    interfaces:
+      UserRepositoryInterface:
+  github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/server/repository/secret:
+    interfaces:
+      SecretRepositoryInterface:
+
