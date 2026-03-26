@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/handlers/grpc/secret"
-	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/models"
+	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/repository/secret_data"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ func GetDownloadCmd(secretsHandler *secret.Handler) *cobra.Command {
 			if secretVersionID == "" {
 				fmt.Print("secret id is empty, you can specify it or leave empty: ")
 				//nolint:errcheck,gosec // can be left empty
-				fmt.Scanln(&secretID)
+				fmt.Scanln(&secretVersionID)
 			}
 
 			var fileInfo os.FileInfo
@@ -58,7 +58,7 @@ func GetDownloadCmd(secretsHandler *secret.Handler) *cobra.Command {
 				return fmt.Errorf("could not dowload: %w", err)
 			}
 
-			var secretData models.SecretTypeBinaryData
+			var secretData secret_data.SecretTypeBinaryData
 			err = json.Unmarshal([]byte(text), &secretData)
 			if err != nil {
 				return fmt.Errorf("could not unmarshal secret data: %w", err)

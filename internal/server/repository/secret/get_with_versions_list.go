@@ -24,27 +24,20 @@ func (repo *SecretRepository) GetWithVersionsList(ctx context.Context, userID ui
 		return models.Secret{}, fmt.Errorf("could not get secret %d: %w", id, err)
 	}
 
-	rows, err := repo.DBPool.Query(ctx, "SELECT id, created_at FROM "+models.SecretVersionTable+" WHERE secret_id = $1 ORDER BY created_at DESC", id)
+	rows, err := repo.DBPool.Query(ctx, "SELECT "+versionsIteratorSelectColumns+" FROM "+models.SecretVersionTable+" WHERE secret_id = $1 ORDER BY created_at DESC", id)
 	if err != nil {
 		return models.Secret{}, fmt.Errorf("could not get secret %d versions: %w", id, err)
 	}
 	defer rows.Close()
 
-	for rows.Next() {
-		secretVersion := models.SecretVersion{
-			SecretID: id,
-		}
-		err = rows.Scan(&secretVersion.ID, &secretVersion.CreatedAt)
+	for secretVersion, err := range versionsIterator(rows) {
 		if err != nil {
-			return models.Secret{}, fmt.Errorf("could not scan secret %d version row: %w", id, err)
+			if err != nil {
+				return models.Secret{}, fmt.Errorf("could not scan secret %d version row: %w", id, err)
+			}
+			break // Stop on error
 		}
-
 		secret.Versions = append(secret.Versions, secretVersion)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return models.Secret{}, fmt.Errorf("could not get secret %d version rows: %w", id, err)
 	}
 
 	return secret, nil

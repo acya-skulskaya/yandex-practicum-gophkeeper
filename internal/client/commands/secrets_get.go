@@ -1,13 +1,13 @@
 package commands
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/handlers/grpc/secret"
+	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/repository/secret_data"
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/models"
 	"github.com/spf13/cobra"
 )
@@ -75,43 +75,17 @@ func GetGetCmd(secretsHandler *secret.Handler) *cobra.Command {
 
 				switch secret.Type {
 				case models.SecretTypeBinary:
-					var secretVersionData models.SecretTypeBinaryData
-					err = json.Unmarshal([]byte(secret.Versions[0].Data), &secretVersionData)
-					if err != nil {
-						return fmt.Errorf("could not unmarshall secretVersionData %w", err)
-					}
-					fmt.Printf("ORIGINAL FILE PATH: %s\n", secretVersionData.OriginalFilePath)
-					fmt.Printf("FILE NAME: %s\n", secretVersionData.FileName)
-					fmt.Printf("FILE SIZE: %d\n", secretVersionData.FileSize)
-					fmt.Printf("METADATA: %s\n", secretVersionData.Metadata)
+					repo := secret_data.NewStandardInputOutputRepo[*secret_data.SecretTypeBinaryData]()
+					repo.Print(secret.Versions[0].Data)
 				case models.SecretTypeText:
-					var secretVersionData models.SecretTypeTextData
-					err = json.Unmarshal([]byte(secret.Versions[0].Data), &secretVersionData)
-					if err != nil {
-						return fmt.Errorf("could not unmarshall secretVersionData %w", err)
-					}
-					fmt.Printf("TEXT: %s\n", secretVersionData.Text)
-					fmt.Printf("METADATA: %s\n", secretVersionData.Metadata)
+					repo := secret_data.NewStandardInputOutputRepo[*secret_data.SecretTypeTextData]()
+					repo.Print(secret.Versions[0].Data)
 				case models.SecretTypeLoginPassword:
-					var secretVersionData models.SecretTypeLoginPasswordData
-					err = json.Unmarshal([]byte(secret.Versions[0].Data), &secretVersionData)
-					if err != nil {
-						return fmt.Errorf("could not unmarshall secretVersionData %w", err)
-					}
-					fmt.Printf("LOGIN: %s\n", secretVersionData.Login)
-					fmt.Printf("PASSWORD: %s\n", secretVersionData.Password)
-					fmt.Printf("METADATA: %s\n", secretVersionData.Metadata)
+					repo := secret_data.NewStandardInputOutputRepo[*secret_data.SecretTypeLoginPasswordData]()
+					repo.Print(secret.Versions[0].Data)
 				case models.SecretTypeBankCard:
-					var secretVersionData models.SecretTypeBankCardData
-					err = json.Unmarshal([]byte(secret.Versions[0].Data), &secretVersionData)
-					if err != nil {
-						return fmt.Errorf("could not unmarshall secretVersionData %w", err)
-					}
-					fmt.Printf("CARD NUMBER: %s\n", secretVersionData.Number)
-					fmt.Printf("CARD CVV: %s\n", secretVersionData.CVV)
-					fmt.Printf("CARD EXPIRY: %s\n", secretVersionData.Expiry)
-					fmt.Printf("CARD HOLDER NAME: %s\n", secretVersionData.HolderName)
-					fmt.Printf("METADATA: %s\n", secretVersionData.Metadata)
+					repo := secret_data.NewStandardInputOutputRepo[*secret_data.SecretTypeBankCardData]()
+					repo.Print(secret.Versions[0].Data)
 				}
 			}
 

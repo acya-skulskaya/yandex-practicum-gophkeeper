@@ -36,26 +36,21 @@ func (repo *SecretRepository) List(ctx context.Context, userID uint) ([]models.S
 		return []models.Secret{}, nil
 	}
 
-	rows, err = repo.DBPool.Query(ctx, "SELECT id, secret_id, created_at FROM "+models.SecretVersionTable+" WHERE secret_id = ANY($1) ORDER BY created_at DESC", secretsIDs)
+	rows, err = repo.DBPool.Query(ctx, "SELECT "+versionsIteratorSelectColumns+" FROM "+models.SecretVersionTable+" WHERE secret_id = ANY($1) ORDER BY created_at DESC", secretsIDs)
 	if err != nil {
 		return []models.Secret{}, fmt.Errorf("could not get list of secret versions for user %d: %w", userID, err)
 	}
 	defer rows.Close()
 
 	secretVersions := make(map[uint][]models.SecretVersion)
-	for rows.Next() {
-		secretVersion := models.SecretVersion{}
-		err = rows.Scan(&secretVersion.ID, &secretVersion.SecretID, &secretVersion.CreatedAt)
+	for secretVersion, err := range versionsIterator(rows) {
 		if err != nil {
-			return []models.Secret{}, fmt.Errorf("could not scan a row with secret versions to get user's %d secrets: %w", userID, err)
+			if err != nil {
+				return []models.Secret{}, fmt.Errorf("could not scan a row with secret versions to get user's %d secrets: %w", userID, err)
+			}
+			break // Stop on error
 		}
-
 		secretVersions[secretVersion.SecretID] = append(secretVersions[secretVersion.SecretID], secretVersion)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return []models.Secret{}, fmt.Errorf("could not get secret versions to get user's %d secrets: %w", userID, err)
 	}
 
 	for i := range secrets {

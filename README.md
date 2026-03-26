@@ -30,7 +30,7 @@ GophKeeper представляет собой клиент-серверную �
 Пример файла с настройками для клиента `.env.example.client`
 
 ## Использование Gophkeeper
-Все команды поддерживают как указание параметров сразу, так и интерактивную работу. Все аргументы, не указанные при вызове команты, будут запрошены дополнительно
+Все команды работают в интерактивном режиме. Некоторые аргументы можно указать при вызове.
 
 ### Регистрация
 ```shell
@@ -78,14 +78,6 @@ COMMIT HASH: 463abae
 # create 
 #	--name=SECRET_NAME 
 #	--type=SECRET_TYPE 
-#	--path=PATH_TO_BINARY_FILE 
-#	--metadata=METADATA 
-#	--login=LOGIN_TO_SAVE 
-#	--password=PASSWORD_TO_SAVE 
-#	--bc-number=BANK_CARD_NUMBER 
-#	--bc-cvv=BANK_CARD_CVV 
-#	--bc-expiry=BANK_CARD_EXPIRY_DATE 
-#	--bc-holder-name=BANK_CARD_HOLDER_NAME
 
 $ go run ./cmd/gophkeeper-client/main.go create
 name is required, enter name: github-creds
@@ -125,14 +117,6 @@ secret was saved with ID=30
 # update 
 #	--id=SECRET_ID
 #	--name=SECRET_NAME
-#	--path=PATH_TO_BINARY_FILE 
-#	--metadata=METADATA 
-#	--login=LOGIN_TO_SAVE 
-#	--password=PASSWORD_TO_SAVE 
-#	--bc-number=BANK_CARD_NUMBER 
-#	--bc-cvv=BANK_CARD_CVV 
-#	--bc-expiry=BANK_CARD_EXPIRY_DATE 
-#	--bc-holder-name=BANK_CARD_HOLDER_NAME
 
 $ go run ./cmd/gophkeeper-client/main.go update
 secret id is required, enter id: 29

@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"syscall"
+	"os"
 
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/auth"
 	grpcHandler "github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/client/handlers/grpc/auth"
@@ -28,7 +28,7 @@ func GetRegisterCmd(authHandler *grpcHandler.Handler) *cobra.Command {
 
 			for password == "" {
 				fmt.Print("password is required, enter password: ")
-				bytePassword, err := term.ReadPassword(syscall.Stdin)
+				bytePassword, err := term.ReadPassword(int(os.Stdin.Fd()))
 				if err != nil {
 					fmt.Printf("error: could not read password: %s\n", err.Error())
 				}

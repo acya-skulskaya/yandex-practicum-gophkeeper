@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/api/gophkeeper"
@@ -18,6 +19,10 @@ const (
 	SecretTypeBankCard      = "bank_card"
 )
 
+type SecretModelInterface interface {
+	GetStrID() string
+}
+
 type Secret struct {
 	UpdatedAt *time.Time      `db:"updated_at"`
 	CreatedAt *time.Time      `db:"created_at"`
@@ -28,6 +33,10 @@ type Secret struct {
 	ID        uint            `db:"id"`
 }
 
+func (s *Secret) GetStrID() string {
+	return strconv.FormatUint(uint64(s.ID), 10)
+}
+
 type SecretVersion struct {
 	CreatedAt *time.Time `db:"created_at"`
 	Data      string     `db:"data"`
@@ -35,30 +44,8 @@ type SecretVersion struct {
 	ID        uint       `db:"id"`
 }
 
-type SecretTypeLoginPasswordData struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	Metadata string `json:"metadata"`
-}
-
-type SecretTypeTextData struct {
-	Text     string `json:"text"`
-	Metadata string `json:"metadata"`
-}
-
-type SecretTypeBankCardData struct {
-	Number     string `json:"number"`
-	Expiry     string `json:"expiry"`
-	HolderName string `json:"holder_name"`
-	CVV        string `json:"cvv"`
-	Metadata   string `json:"metadata"`
-}
-
-type SecretTypeBinaryData struct {
-	OriginalFilePath string `json:"original_file_path"`
-	FileName         string `json:"file_name"`
-	Metadata         string `json:"metadata"`
-	FileSize         int64  `json:"file_size"`
+func (s *SecretVersion) GetStrID() string {
+	return strconv.FormatUint(uint64(s.ID), 10)
 }
 
 func MatchPBEnumWIthSecretType(enumString string) string {

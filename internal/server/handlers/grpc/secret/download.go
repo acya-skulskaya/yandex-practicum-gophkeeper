@@ -44,7 +44,7 @@ func (s SecretServer) Download(ctx context.Context, in *pb.SecretShowRequest) (*
 	data := &pb.SecretData{}
 	data.SetData(binary)
 	data.SetText(secret.Versions[0].Data)
-	versionIDStr := strconv.FormatUint(uint64(secret.Versions[0].ID), 10)
+	versionIDStr := secret.Versions[0].GetStrID()
 
 	response := pb.SecretDataResponse_builder{
 		Type:      nil,

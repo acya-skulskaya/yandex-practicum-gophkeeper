@@ -52,8 +52,7 @@ func (s SecretServer) Show(ctx context.Context, in *pb.SecretShowRequest) (*pb.S
 	versions := make([]*pb.SecretVersion, len(secret.Versions))
 	for i, version := range secret.Versions {
 		pbVersion := &pb.SecretVersion{}
-		versionIDStr := strconv.FormatUint(uint64(version.ID), 10)
-		pbVersion.SetVersionId(versionIDStr)
+		pbVersion.SetVersionId(version.GetStrID())
 		pbVersion.SetCreatedAt(timestamppb.New(*version.CreatedAt))
 		if version.Data != "" {
 			pbSecretData := &pb.SecretData{}
@@ -68,7 +67,7 @@ func (s SecretServer) Show(ctx context.Context, in *pb.SecretShowRequest) (*pb.S
 		secretData = versions[0].GetData()
 	}
 
-	versionIDStr := strconv.FormatUint(uint64(secret.Versions[0].ID), 10)
+	versionIDStr := secret.Versions[0].GetStrID()
 	secretType := models.MatchSecretTypeWithPBEnum(secret.Type)
 
 	response := pb.SecretResponse_builder{

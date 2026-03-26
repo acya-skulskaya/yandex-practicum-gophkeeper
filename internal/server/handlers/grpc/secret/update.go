@@ -40,7 +40,7 @@ func (s SecretServer) Update(ctx context.Context, in *pb.SecretUpdateRequest) (*
 
 	var versions []*pb.SecretVersion
 	version := &pb.SecretVersion{}
-	versionIDStr := strconv.FormatUint(uint64(secret.Versions[0].ID), 10)
+	versionIDStr := secret.Versions[0].GetStrID()
 	version.SetVersionId(versionIDStr)
 	version.SetCreatedAt(timestamppb.New(*secret.Versions[0].CreatedAt))
 	versions = append(versions, version)

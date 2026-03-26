@@ -2,7 +2,6 @@ package secret
 
 import (
 	"context"
-	"strconv"
 
 	pb "github.com/acya-skulskaya/yandex-practicum-gophkeeper/api/gophkeeper"
 	"github.com/acya-skulskaya/yandex-practicum-gophkeeper/internal/logger"
@@ -35,12 +34,12 @@ func (s SecretServer) Store(ctx context.Context, in *pb.SecretStoreRequest) (*pb
 
 	var versions []*pb.SecretVersion
 	version := &pb.SecretVersion{}
-	versionIDStr := strconv.FormatUint(uint64(secret.Versions[0].ID), 10)
+	versionIDStr := secret.Versions[0].GetStrID()
 	version.SetVersionId(versionIDStr)
 	version.SetCreatedAt(timestamppb.New(*secret.Versions[0].CreatedAt))
 	versions = append(versions, version)
 
-	secretID := strconv.FormatUint(uint64(secret.ID), 10)
+	secretID := secret.GetStrID()
 
 	response := pb.SecretResponse_builder{
 		Id:        &secretID,

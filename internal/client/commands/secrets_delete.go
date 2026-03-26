@@ -26,7 +26,7 @@ func GetDeleteCmd(secretsHandler *secret.Handler) *cobra.Command {
 			if secretVersionID == "" {
 				fmt.Print("version id is empty, you can specify it or leave empty: ")
 				//nolint:errcheck,gosec // can be left empty
-				fmt.Scanln(&secretID)
+				fmt.Scanln(&secretVersionID)
 			}
 
 			err := secretsHandler.Delete(cmd.Context(), secretID, secretVersionID)
