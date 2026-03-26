@@ -1,0 +1,29 @@
+edition = "2023";
+
+package acyaskulskaya.gophkeeper.auth;
+
+option go_package = "github.com/acya-skulskaya/yandex-practicum-gophkeeper/api/gophkeeper/";
+
+//import "google/protobuf/empty.proto";
+
+// AuthService handles users registration and login
+service AuthService {
+  // Allows to register a new user and login with new user
+  rpc Register(AuthRequest) returns (AuthResponse);
+  // Allows to login an existing user
+  rpc Login(AuthRequest) returns (AuthResponse);
+}
+
+// Requests
+message AuthRequest {
+  reserved 1;
+  string username = 2;
+  string password = 3;
+}
+
+// Responses
+message AuthResponse {
+  string token = 1;
+}
+
+
